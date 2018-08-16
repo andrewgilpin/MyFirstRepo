@@ -1,1 +1,79 @@
-<h1>Look, it's a quick page!</h1>
+<!DOCTYPE html> 
+<html> 
+	<body>
+		<h1>SETTING UP A LAYER 3 INTERFACE ON A RAD 203</h1>
+			<p>In some cases you might be asked to setup a layer 3 interface for a customer to ping to, but so far only CenturyLink in BHN has asked for this.  If you need to do this then please input the information in the fields below and hit the button but be aware that this is SERVICE IMPACTING. </p>
+<br>
+<p>**NOTE** If you have any issues with any portion of this generator, please reach out to a senior tech or an engineer.</p>
+<br> 
+ 
+<p>** This configuration works if we are bridging the mgmt interface.  If we are not, then we you will need to create the bridge using the button below**</p>
+<br>
+<br>
+
+
+		<form action="rad.html" method="post"> 
+			<h1>Rad 203 Layer 3 Interface Command Generator</h1> 
+		<fieldset> 
+			<legend>Customer Information:</legend> 
+				<label for="outFlow">Out Flow:</label> 
+					<input type="text" id="outFlow" name="outFlow"> <br /> 
+				<label for="inFlow">In Flow:</label> 
+					<input type="text" id="inFlow" name="inFlow"> <br /> 
+				<label for="vlan">Vlan:</label> 
+					<input type="text" id="vlan" name="vlan"> <br /> 
+				<label for="outClass">Outbound Classifier:</label> 
+					<input type="text" id="outClass" name="outClass"> <br /> 
+				<label for="untagged">Untagged Classifier:</label> 
+					<input type="text" id="untagged" name="untagged"> <br /> 
+				<label for="customerIp">Customer IP information:</label> 
+					<input type="text" id="customerIp" name="customerIp"> 
+		</fieldset>  
+			<button id="formSubmit" type="submit">Generate Config</button><br> 
+				<br /> 
+			<button id="formRevert" type="submit">Revert Config</button><br>
+  				<br /> 
+			<button id="formBridge" type="submit">Create Bridge</button> 
+   				<br /> 
+				<br />
+			<button id="formClear" type="reset"> Clear Fields/Output </button> 
+				<h1>Command output:</h1><br>  
+		<output name="result"> </output> <br> 
+		<output name="revert"> </output> <br>
+		</form>        
+	<script>             
+		document.getElementById("formSubmit").onclick = result;
+		document.getElementById("formClear").onclick = clear;
+		document.getElementById("formBridge").onclick = bridge;
+		document.getElementById("formRevert").onclick = revert;
+			function result(event) {
+	                	event.preventDefault();     
+				var inFlow = document.getElementById("inFlow").value;     
+				var outFlow = document.getElementById("outFlow").value;                 
+				var vlan = document.getElementById("vlan").value;     
+				var outClass = document.getElementById("outClass").value;                 
+				var untagged = document.getElementById("untagged").value;     
+				var customerIp = document.getElementById("customerIp").value;                 
+					document.querySelector("output").innerHTML = "flow" + "<br>" + "flow " + inFlow +  "<br>" + "shutdown" + "<br>" + "exit" + "<br>" + "flow " + outFlow +  "<br>" + "shutdown" +  "<br>" + "exit" +  "<br>" + "exit" + "<br>" + "bridge 1" +  "<br>" + "vlan " + vlan +  "<br>" + "exit" +  "<br>" + "exit" + "<br>" + "port svi 2" +  "<br>" + "name L3_test" +  "<br>" + "no shutdown" +  "<br>" + "exit" + "<br>" + "exit" + "<br>" + "flow" + "<br>" + "flow \
+\"TEST\_FLOW\_IN\"" +  "<br>" + "classifier " + outClass +  "<br>" + "policer profile Policer1" +   "<br>" + "vlan-tag pop vlan" +  "<br>" + "ingress-port ethernet 1" +  "<br>" + "egress-port svi 2" +  "<br>" + "no shutdown" +  "<br>" + "exit" +  "<br>" + "flow \"TEST\_FLOW\_OUT\""+  "<br>" + "classifier " + untagged +  "<br>" + "policer profile Policer1" +  "<br>" + "vlan-tag push vlan " + vlan + " p-bit fixed 7" +  "<br>" + "ingress-port svi 2" +  "<br>" + "egress-port ethernet 1 queue 1 block 0/1" +  "<br>" + "no shutdown" +  "<br>" + "exit" + "<br>" + "exit" +  "<br>" + "router 1" +  "<br>" + "interface 2" +  "<br>" +"address " + customerIp +  "<br>" + "bind svi 2" +  "<br>" + "no shutdown" + "<br>" + "exit all";             
+			}
+			function revert(event) {
+				event.preventDefault();      				
+				var inFlow = document.getElementById("inFlow").value;      				
+				var outFlow = document.getElementById("outFlow").value;
+                		var vlan = document.getElementById("vlan").value;
+      				var outClass = document.getElementById("outClass").value;
+                  		var untagged = document.getElementById("untagged").value;
+      				var customerIp = document.getElementById("customerIp").value;        	
+					document.querySelector("output").innerHTML = "router 1" + "<br>" + "interface 2" + "<br>" + "shutdown" + "<br>" + "exit" + "<br>" + "exit" + "<br>" + "bridge 1" + "<br>" + "no vlan " + vlan + "<br>" + "exit" + "<br>" + "flow" + "<br>" +  "flow TEST_FLOW_IN" + "<br>" + "shutdown" + "<br>" + "exit" + "<br>" + "no flow TEST_FLOW_IN" + "<br>" + "flow TEST_FLOW_OUT" + "<br>" + "shutdown" + "<br>" + "exit" + "<br>" + "no flow TEST_FLOW_OUT" + "<br>" + "flow " + inFlow +  "<br>" + "no shutdown" + "<br>" + "exit" + "<br>" + "flow " + outFlow +  "<br>" + "no shutdown" +  "<br>" + "exit" +  "<br>" + "exit" + "<br>" + "port svi 2" + "<br>" + "shutdown" + "<br>" + "exit" + "<br>" + "no svi 2" + "<br>" + "exit" + "<br>" + "router 1" + "<br>" + "no interface 2" + "<br>" + "exit";
+			}
+			function bridge(event) {
+ 				event.preventDefault();
+				var vlan = document.getElementById("vlan").value; 
+					 document.querySelector("output").innerHTML = "bridge 1" + "<br>" + "name bridge 1" + "<br>" + "port 1" + "<br>" + "name \"svi 2\"" + "<br>" + "no shutdown" + "<br>" + "exit" + "<br>" +  "port 2" + "<br>" + "name \"network port\"" + "<br>" + "no shutdown" + "<br>" + "exit";			}
+			function clear(event) {                 
+				document.querySelector("output").innerHTML = " ";             
+			}         
+	</script>     
+	</body> 
+</html>
