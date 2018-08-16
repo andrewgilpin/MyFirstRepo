@@ -70,7 +70,7 @@
 			function bridge(event) {
  				event.preventDefault();
 				var vlan = document.getElementById("vlan").value; 
-					 document.querySelector("output").innerHTML = "bridge 1" + "<br>" + "name bridge 1" + "<br>" + "port 1" + "<br>" + "name \"svi 2\"" + "<br>" + "no shutdown" + "<br>" + "exit" + "<br>" +  "port 2" + "<br>" + "name \"network port\"" + "<br>" + "no shutdown" + "<br>" + "exit";			}
+					 document.querySelector("output").innerHTML = "bridge 1" + "<br>" + "name \"bridge 1\"" + "<br>" + "port 1" + "<br>" + "name \"svi 2\"" + "<br>" + "no shutdown" + "<br>" + "exit" + "<br>" +  "port 2" + "<br>" + "name \"network port\"" + "<br>" + "no shutdown" + "<br>" + "exit";			}
 			function clear(event) {                 
 				document.querySelector("output").innerHTML = " ";             
 			}         
